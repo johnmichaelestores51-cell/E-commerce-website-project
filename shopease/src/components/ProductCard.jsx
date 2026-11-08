@@ -22,7 +22,12 @@ export default function ProductCard({
             isWishlisted ? "active" : ""
           }`}
           onClick={() => onToggleWishlist?.(product)}
-          aria-label="Toggle wishlist"
+          aria-label={
+            isWishlisted
+              ? `Remove ${product.name} from wishlist`
+              : `Add ${product.name} to wishlist`
+          }
+          aria-pressed={isWishlisted}
         >
           {isWishlisted ? "♥" : "♡"}
         </button>

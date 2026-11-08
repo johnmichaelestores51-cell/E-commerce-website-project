@@ -11,6 +11,7 @@ import ProductModal from "./components/ProductModal";
 import CartDrawer from "./components/CartDrawer";
 import CheckoutModal from "./components/CheckoutModal";
 import Toast from "./components/Toast";
+import Wishlist from "./pages/Wishlist";
 
 import { products } from "./data/products";
 import useCart from "./hooks/useCart";
@@ -22,6 +23,7 @@ export default function App() {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showWishlist, setShowWishlist] = useState(false);
 
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -137,93 +139,108 @@ export default function App() {
           0
         )}
         wishlistCount={wishlist.length}
+        isWishlistOpen={showWishlist}
         onCartClick={() => setCartOpen(true)}
         onWishlistClick={() => {
-          setSelectedCategory("");
-          setSearch("");
-          scrollToProducts();
+          setShowWishlist(true);
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }}
-        onSearch={setSearch}
+        onSearch={(value) => {
+          setSearch(value);
+          setShowWishlist(false);
+        }}
       />
 
       <main>
-        <HeroBanner onShopNow={scrollToProducts} />
+        {showWishlist ? (
+          <Wishlist
+            products={wishlist}
+            onContinueShopping={() => setShowWishlist(false)}
+            onAddToCart={handleAddToCart}
+            onToggleWishlist={handleToggleWishlist}
+            onViewDetails={setSelectedProduct}
+          />
+        ) : (
+          <>
+            <HeroBanner onShopNow={scrollToProducts} />
 
-        <CategorySection
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onSelectCategory={setSelectedCategory}
-        />
-
-        <FeaturedProducts
-          products={products}
-          wishlist={wishlist}
-          onAddToCart={handleAddToCart}
-          onToggleWishlist={handleToggleWishlist}
-          onViewDetails={setSelectedProduct}
-        />
-
-        <section className="products-section" id="products">
-          <div className="section-heading">
-            <h2>All Products</h2>
-            <p>Explore our complete collection.</p>
-          </div>
-
-          <div className="product-toolbar">
-            <input
-              type="search"
-              placeholder="Search products..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+            <CategorySection
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onSelectCategory={setSelectedCategory}
             />
 
-            <select
-              value={selectedCategory}
-              onChange={(e) =>
-                setSelectedCategory(e.target.value)
-              }
-            >
-              <option value="">All Categories</option>
+            <FeaturedProducts
+              products={products}
+              wishlist={wishlist}
+              onAddToCart={handleAddToCart}
+              onToggleWishlist={handleToggleWishlist}
+              onViewDetails={setSelectedProduct}
+            />
 
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="product-grid">
-            {filteredProducts.length > 0 ? (
-              filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onAddToCart={handleAddToCart}
-                  onToggleWishlist={handleToggleWishlist}
-                  onViewDetails={setSelectedProduct}
-                  isWishlisted={wishlist.some(
-                    (item) => item.id === product.id
-                  )}
-                />
-              ))
-            ) : (
-              <div className="no-products">
-                <h3>No products found</h3>
-                <p>Try another search or category.</p>
-
-                <button
-                  onClick={() => {
-                    setSearch("");
-                    setSelectedCategory("");
-                  }}
-                >
-                  Clear Filters
-                </button>
+            <section className="products-section" id="products">
+              <div className="section-heading">
+                <h2>All Products</h2>
+                <p>Explore our complete collection.</p>
               </div>
-            )}
-          </div>
-        </section>
+
+              <div className="product-toolbar">
+                <input
+                  type="search"
+                  placeholder="Search products..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+
+                <select
+                  value={selectedCategory}
+                  onChange={(e) =>
+                    setSelectedCategory(e.target.value)
+                  }
+                >
+                  <option value="">All Categories</option>
+
+                  {categories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="product-grid">
+                {filteredProducts.length > 0 ? (
+                  filteredProducts.map((product) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      onAddToCart={handleAddToCart}
+                      onToggleWishlist={handleToggleWishlist}
+                      onViewDetails={setSelectedProduct}
+                      isWishlisted={wishlist.some(
+                        (item) => item.id === product.id
+                      )}
+                    />
+                  ))
+                ) : (
+                  <div className="no-products">
+                    <h3>No products found</h3>
+                    <p>Try another search or category.</p>
+
+                    <button
+                      onClick={() => {
+                        setSearch("");
+                        setSelectedCategory("");
+                      }}
+                    >
+                      Clear Filters
+                    </button>
+                  </div>
+                )}
+              </div>
+            </section>
+          </>
+        )}
       </main>
 
       <Footer />

@@ -47,12 +47,7 @@ export default function CartDrawer({
 
                     <div className="quantity-controls">
                       <button
-                        onClick={() =>
-                          onUpdateQuantity?.(
-                            item.id,
-                            Math.max(1, item.quantity - 1)
-                          )
-                        }
+                        onClick={() => onUpdateQuantity?.(item.id, -1)}
                       >
                         -
                       </button>
@@ -60,12 +55,7 @@ export default function CartDrawer({
                       <span>{item.quantity}</span>
 
                       <button
-                        onClick={() =>
-                          onUpdateQuantity?.(
-                            item.id,
-                            item.quantity + 1
-                          )
-                        }
+                        onClick={() => onUpdateQuantity?.(item.id, 1)}
                       >
                         +
                       </button>

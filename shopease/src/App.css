@@ -327,6 +327,16 @@ a {
   padding: 60px 20px;
 }
 
+.wishlist-continue-button {
+  display: block;
+  margin: 24px auto 0;
+  padding: 12px 20px;
+  border-radius: 8px;
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+}
+
 /* FOOTER */
 
 .footer {

@@ -4,6 +4,7 @@ import React from "react";
 export default function Header({
   cartCount = 0,
   wishlistCount = 0,
+  isWishlistOpen = false,
   onCartClick,
   onWishlistClick,
   onSearch,
@@ -31,7 +32,10 @@ export default function Header({
         </form>
 
         <nav className="header-actions">
-          <button onClick={onWishlistClick}>
+          <button
+            onClick={onWishlistClick}
+            aria-pressed={isWishlistOpen}
+          >
             ♡ <span>Wishlist ({wishlistCount})</span>
           </button>
 
